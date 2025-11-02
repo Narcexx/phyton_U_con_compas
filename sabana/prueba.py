@@ -1,11 +1,19 @@
 from logica.elefante import Elefante
+from logica.sabana import Sabana
+from logica.comida import Pasto
 
-elefante1 = Elefante("Dumbo", (0, 0), "M")
+# Crear sabana
+sabana = Sabana(10, 10)
 
+# Crear animales
+elefante1 = Elefante("Dumbo", (2, 3), "M")
+sabana.agregar_animal(elefante1)
+
+# Agregar comida
+sabana.agregar_comida(Pasto((5, 5)))
+
+# Simular movimientos
 for _ in range(5):
-    elefante1.comer()
-    elefante1.paso()
-
-print(f"Comidas: {elefante1.comidas}")
-print(f"Pasos dados: {elefante1.pasos_dados}")
-print(f"¿Sigue vivo?: {elefante1.vivo}")
+    sabana.mover_animales()
+    sabana.mostrar_estado()
+    print("-----")
