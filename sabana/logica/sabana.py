@@ -31,3 +31,28 @@ class Sabana:
     def mostrar_estado(self):
         for animal in self.animales:
             print(f"{animal.nombre}: posicion {animal.posicion}, pasos {animal.pasos_dados}, vivo: {animal.vivo}")
+
+
+    def reproducir(self):
+        nuevos_animales = []
+        for i in range(len(self.animales)):
+            for j in range(i + 1, len(self.animales)):
+                a1 = self.animales[i]
+                a2 = self.animales[j]
+
+                # deben ser del mismo tipo, sexos distintos y vivos
+                if type(a1) == type(a2) and a1.sexo != a2.sexo and a1.vivo and a2.vivo:
+                    # calcular distancia
+                    dist = abs(a1.posicion[0] - a2.posicion[0]) + abs(a1.posicion[1] - a2.posicion[1])
+                    if dist <= 2:
+                        # crear cria (misma especie)
+                        nombre_hijo = f"Bebe_{a1.nombre}_{a2.nombre}"
+                        nueva_pos = ((a1.posicion[0] + a2.posicion[0]) // 2,
+                                    (a1.posicion[1] + a2.posicion[1]) // 2)
+                        nuevo_sexo = "M" if (i + j) % 2 == 0 else "F"
+                        bebe = type(a1)(nombre_hijo, nueva_pos, nuevo_sexo)
+                        nuevos_animales.append(bebe)
+                        print(f"{a1.nombre} y {a2.nombre} tuvieron una cría llamada {nombre_hijo}.")
+
+        # agregar los nuevos animales al final del ciclo
+        self.animales.extend(nuevos_animales)
