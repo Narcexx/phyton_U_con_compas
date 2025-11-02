@@ -14,8 +14,8 @@ sabana.agregar_animal(elefante1)
 sabana.agregar_animal(leon1)
 sabana.agregar_animal(chimpance1)
 
-# Simular 10 pasos
 for _ in range(10):
     sabana.mover_animales()
+    sabana.reproducir()   # <--- nueva línea
     sabana.mostrar_estado()
     print("----")
