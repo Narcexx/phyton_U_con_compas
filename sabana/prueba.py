@@ -1,19 +1,21 @@
-from logica.elefante import Elefante
 from logica.sabana import Sabana
-from logica.comida import Pasto
+from logica.elefante import Elefante
+from logica.leon import Leon
+from logica.chimpance import Chimpance
 
-# Crear sabana
 sabana = Sabana(10, 10)
 
-# Crear animales
-elefante1 = Elefante("Dumbo", (2, 3), "M")
+# Animales
+elefante1 = Elefante("Dumbo", (1, 1), "M")
+leon1 = Leon("Simba", (3, 3), "M")
+chimpance1 = Chimpance("Coco", (2, 2), "F")
+
 sabana.agregar_animal(elefante1)
+sabana.agregar_animal(leon1)
+sabana.agregar_animal(chimpance1)
 
-# Agregar comida
-sabana.agregar_comida(Pasto((5, 5)))
-
-# Simular movimientos
-for _ in range(5):
+# Simular 10 pasos
+for _ in range(10):
     sabana.mover_animales()
     sabana.mostrar_estado()
-    print("-----")
+    print("----")
