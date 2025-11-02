@@ -32,7 +32,6 @@ class Sabana:
         for animal in self.animales:
             print(f"{animal.nombre}: posicion {animal.posicion}, pasos {animal.pasos_dados}, vivo: {animal.vivo}")
 
-
     def reproducir(self):
         nuevos_animales = []
         for i in range(len(self.animales)):
@@ -53,6 +52,21 @@ class Sabana:
                             nuevos_animales.append(bebe)
                             print(f"{a1.nombre} y {a2.nombre} tuvieron un bebé llamado {nombre_hijo}.")
                         else:
-                            print(f"{a1.nombre} y {a2.nombre} no pueden reproducirse (no comieron 3 veces).")
+                            print(f"{a1.nombre} y {a2.nombre} no pueden reproducirse (no comieron 3 veces)")
 
         self.animales.extend(nuevos_animales)
+
+    def generar_comida(self, cantidad):
+        # Genera comida aleatoria en distintas posiciones
+        tipos = ["pasto", "carne", "insectos"]
+        for _ in range(cantidad):
+            tipo = tipos[randint(0, 2)]
+            x = randint(0, self.ancho - 1)
+            y = randint(0, self.alto - 1)
+            if tipo == "pasto":
+                self.comidas.append(Pasto((x, y)))
+            elif tipo == "carne":
+                self.comidas.append(Carne((x, y)))
+            else:
+                self.comidas.append(Insectos((x, y)))
+
