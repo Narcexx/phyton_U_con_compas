@@ -23,7 +23,11 @@ class Sabana:
                 nuevo_y = max(0, min(self.alto - 1, y + randint(-1, 1)))
                 animal.posicion = (nuevo_x, nuevo_y)
                 animal.paso()
+            else:
+                # si murio lo quitamos de la lista
+                self.animales.remove(animal)
+                print(f"{animal.nombre} fue removido de la sabana")
 
     def mostrar_estado(self):
         for animal in self.animales:
-            print(f"{animal.nombre}: posición {animal.posicion}, pasos {animal.pasos_dados}, vivo: {animal.vivo}")
+            print(f"{animal.nombre}: posicion {animal.posicion}, pasos {animal.pasos_dados}, vivo: {animal.vivo}")

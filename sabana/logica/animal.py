@@ -8,20 +8,20 @@ class Animal:
         self.vivo = True
 
     def mover(self):
-        # Por ahora no hace nada
         pass
 
     def comer(self):
-        # Aumenta el contador de comidas
         self.comidas += 1
 
     def paso(self):
-        # Suma un paso y verifica si muere
+        # Cada vez que da un paso, aumenta el contador y revisa si muere
         self.pasos_dados += 1
         if self.pasos_dados >= self.max_pasos():
             self.vivo = False
+            print(f"{self.nombre} ha muerto por cansancio")
 
     def max_pasos(self):
-        # Este metodo sera diferente para cada animal
+        # Este metodo sera distinto para cada animal
         return 100
+
 
