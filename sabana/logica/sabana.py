@@ -1,4 +1,4 @@
-from random import randint
+import random
 from .elefante import Elefante
 from .comida import Pasto, Carne, Insectos
 
@@ -16,11 +16,11 @@ class Sabana:
         self.comidas.append(comida)
 
     def mover_animales(self):
-        for animal in self.animales:
+        for animal in list(self.animales):
             if animal.vivo:
                 x, y = animal.posicion
-                nuevo_x = max(0, min(self.ancho - 1, x + randint(-1, 1)))
-                nuevo_y = max(0, min(self.alto - 1, y + randint(-1, 1)))
+                nuevo_x = max(0, min(self.ancho - 1, x + random.randint(-1, 1)))
+                nuevo_y = max(0, min(self.alto - 1, y + random.randint(-1, 1)))
                 animal.posicion = (nuevo_x, nuevo_y)
                 animal.paso()
             else:
@@ -50,19 +50,19 @@ class Sabana:
                             nuevo_sexo = "M" if (i + j) % 2 == 0 else "F"
                             bebe = type(a1)(nombre_hijo, nueva_pos, nuevo_sexo)
                             nuevos_animales.append(bebe)
-                            print(f"{a1.nombre} y {a2.nombre} tuvieron un bebé llamado {nombre_hijo}.")
+                            print(f"{a1.nombre} y {a2.nombre} tuvieron un bebe llamado {nombre_hijo}")
                         else:
                             print(f"{a1.nombre} y {a2.nombre} no pueden reproducirse (no comieron 3 veces)")
 
         self.animales.extend(nuevos_animales)
 
-    def generar_comida(self, cantidad):
+    def generar_comida(self, cantidad=5):
         # Genera comida aleatoria en distintas posiciones
         tipos = ["pasto", "carne", "insectos"]
         for _ in range(cantidad):
-            tipo = tipos[randint(0, 2)]
-            x = randint(0, self.ancho - 1)
-            y = randint(0, self.alto - 1)
+            tipo = random.choice(tipos)
+            x = random.randint(0, self.ancho - 1)
+            y = random.randint(0, self.alto - 1)
             if tipo == "pasto":
                 self.comidas.append(Pasto((x, y)))
             elif tipo == "carne":
@@ -70,8 +70,9 @@ class Sabana:
             else:
                 self.comidas.append(Insectos((x, y)))
 
+
     def mover_hacia_comida(self):
-        # Cada animal se movera hacia su comida preferida mas cercana.
+        # Cada animal se movera hacia su comida preferida mas cercana
         for animal in self.animales:
             if not animal.vivo:
                 continue
@@ -114,5 +115,8 @@ class Sabana:
                 if animal.posicion == comida_cercana.posicion:
                     animal.comer()
                     self.comidas.remove(comida_cercana)
-                    print(f"🍽️ {animal.nombre} comió {preferida} en {animal.posicion}.")
+                    print(f"{animal.nombre} comio {preferida} en {animal.posicion}")
+        # Si queda poca comida, generar mas
+        if len(self.comidas) < 3:
+            self.generar_comida(5)
 
