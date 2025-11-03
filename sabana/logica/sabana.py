@@ -70,3 +70,49 @@ class Sabana:
             else:
                 self.comidas.append(Insectos((x, y)))
 
+    def mover_hacia_comida(self):
+        # Cada animal se movera hacia su comida preferida mas cercana.
+        for animal in self.animales:
+            if not animal.vivo:
+                continue
+
+            # definir que tipo de comida busca
+            if animal.__class__.__name__ == "Elefante":
+                preferida = "pasto"
+            elif animal.__class__.__name__ == "Leon":
+                preferida = "carne"
+            elif animal.__class__.__name__ == "Chimpance":
+                preferida = "insectos"
+            else:
+                preferida = None
+
+            # buscar la comida mas cercana
+            comida_cercana = None
+            menor_distancia = 999
+            for c in self.comidas:
+                if c.tipo == preferida:
+                    dist = abs(animal.posicion[0] - c.posicion[0]) + abs(animal.posicion[1] - c.posicion[1])
+                    if dist < menor_distancia:
+                        menor_distancia = dist
+                        comida_cercana = c
+
+            # moverse hacia la comida
+            if comida_cercana:
+                x, y = animal.posicion
+                cx, cy = comida_cercana.posicion
+                if cx > x:
+                    x += 1
+                elif cx < x:
+                    x -= 1
+                if cy > y:
+                    y += 1
+                elif cy < y:
+                    y -= 1
+                animal.posicion = (x, y)
+
+                # si llego, comer
+                if animal.posicion == comida_cercana.posicion:
+                    animal.comer()
+                    self.comidas.remove(comida_cercana)
+                    print(f"🍽️ {animal.nombre} comió {preferida} en {animal.posicion}.")
+
