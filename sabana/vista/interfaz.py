@@ -30,6 +30,7 @@ class Interfaz:
             "carne": pygame.image.load(os.path.join("imagenes", "carne.png")),
             "insectos": pygame.image.load(os.path.join("imagenes", "insectos.png")),
         }
+        self.contador_movimiento = 0
 
         # redimensiona todas las imagenes
         for clave in self.imagenes_animales:
@@ -66,14 +67,15 @@ class Interfaz:
                 if evento.type == pygame.QUIT:
                     corriendo = False
 
-            # actualizar logica del mundo
-            self.sabana.mover_hacia_comida()
-            self.sabana.reproducir()
+            # controlar velocidad de movimiento
+            self.contador_movimiento += 1
+            if self.contador_movimiento >= 30:  # mover cada 30 frames (0.5 seg si hay 60 fps)
+                self.sabana.mover_hacia_comida()
+                self.sabana.reproducir()
+                self.contador_movimiento = 0
 
-            # redibujar pantalla
+            # redibujar siempre
             self.dibujar()
-
-            # controlar velocidad (60 FPS)
             self.reloj.tick(60)
 
         pygame.quit()
