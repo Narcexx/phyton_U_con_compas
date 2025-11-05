@@ -13,7 +13,7 @@ class Interfaz:
         pygame.display.set_caption("Sabana")
         self.reloj = pygame.time.Clock()
 
-        carpeta_base = os.path.dirname(__file__)  # carpeta donde está interfaz.py
+        carpeta_base = os.path.dirname(__file__)  # carpeta donde esta interfaz.py
         carpeta_imagenes = os.path.join(carpeta_base, "..", "imagenes")
 
         self.fondo = pygame.image.load(os.path.join(carpeta_imagenes, "sabana.png"))
