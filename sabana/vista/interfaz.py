@@ -13,22 +13,25 @@ class Interfaz:
         pygame.display.set_caption("Sabana")
         self.reloj = pygame.time.Clock()
 
-        self.fondo = pygame.image.load(os.path.join("imagenes", "sabana.png"))
+        carpeta_base = os.path.dirname(__file__)  # carpeta donde está interfaz.py
+        carpeta_imagenes = os.path.join(carpeta_base, "..", "imagenes")
+
+        self.fondo = pygame.image.load(os.path.join(carpeta_imagenes, "sabana.png"))
         self.fondo = pygame.transform.scale(self.fondo, (self.ancho_pantalla, self.alto_pantalla))
 
         self.imagenes_animales = {
-            "Elefante_M": pygame.image.load(os.path.join("imagenes", "elefante_macho.png")),
-            "Elefante_F": pygame.image.load(os.path.join("imagenes", "elefante_hembra.png")),
-            "Leon_M": pygame.image.load(os.path.join("imagenes", "leon_macho.png")),
-            "Leon_F": pygame.image.load(os.path.join("imagenes", "leon_hembra.png")),
-            "Chimpance_M": pygame.image.load(os.path.join("imagenes", "chimpance_macho.png")),
-            "Chimpance_F": pygame.image.load(os.path.join("imagenes", "chimpance_hembra.png")),
+            "Elefante_M": pygame.image.load(os.path.join(carpeta_imagenes, "elefante_macho.png")),
+            "Elefante_F": pygame.image.load(os.path.join(carpeta_imagenes, "elefante_hembra.png")),
+            "Leon_M": pygame.image.load(os.path.join(carpeta_imagenes, "leon_macho.png")),
+            "Leon_F": pygame.image.load(os.path.join(carpeta_imagenes, "leon_hembra.png")),
+            "Chimpance_M": pygame.image.load(os.path.join(carpeta_imagenes, "chimpance_macho.png")),
+            "Chimpance_F": pygame.image.load(os.path.join(carpeta_imagenes, "chimpance_hembra.png")),
         }
 
         self.imagenes_comidas = {
-            "pasto": pygame.image.load(os.path.join("imagenes", "pasto.png")),
-            "carne": pygame.image.load(os.path.join("imagenes", "carne.png")),
-            "insectos": pygame.image.load(os.path.join("imagenes", "insectos.png")),
+            "pasto": pygame.image.load(os.path.join(carpeta_imagenes, "pasto.png")),
+            "carne": pygame.image.load(os.path.join(carpeta_imagenes, "carne.png")),
+            "insectos": pygame.image.load(os.path.join(carpeta_imagenes, "insectos.png")),
         }
         self.contador_movimiento = 0
 
