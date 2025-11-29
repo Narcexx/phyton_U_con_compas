@@ -1,6 +1,7 @@
 import random
 from .elefante import Elefante
 from .comida import Pasto, Carne, Insectos
+from persistencia.gestor_guardado import Gestor_Guardado
 
 class Sabana:
     def __init__(self, ancho, alto):
@@ -8,6 +9,11 @@ class Sabana:
         self.alto = alto
         self.animales = []
         self.comidas = []
+        
+        self.ciclos = 0  # Aquí llevaremos la cuenta de los ciclos
+        self.manejador = Gestor_Guardado() 
+        self.frecuencia_autoguardado = 50 # Guardar cada 50 ciclos
+        self.ultimo_mensaje = "" # Para mandar mensajes a la vista
 
     def agregar_animal(self, animal):
         self.animales.append(animal)
@@ -16,6 +22,15 @@ class Sabana:
         self.comidas.append(comida)
 
     def mover_animales(self):
+        
+        # Aumentar ciclos y revisar Autoguardado 
+        
+        self.ciclos += 1  
+
+        if self.ciclos % self.frecuencia_autoguardado == 0:
+            self.guardar_datos("autoguardado") # Guardamos en un archivo aparte llamado 'autoguardado'
+            self.ultimo_mensaje = "Autoguardado..." 
+        
         for animal in list(self.animales):
             if animal.vivo:
                 x, y = animal.posicion
@@ -72,22 +87,27 @@ class Sabana:
 
 
     def mover_hacia_comida(self):
-        # Cada animal se movera hacia su comida preferida mas cercana
+        self.ciclos += 1
+        
+        # Revisamos Autoguardado aquí también
+        if self.ciclos % self.frecuencia_autoguardado == 0:
+            self.guardar_datos("autoguardado") 
+            self.ultimo_mensaje = "Autoguardado..."
+        else:
+            # Limpiamos el mensaje si no estamos guardando
+            self.ultimo_mensaje = ""
+
         for animal in self.animales:
             if not animal.vivo:
                 continue
 
-            # definir que tipo de comida busca
-            if animal.__class__.__name__ == "Elefante":
-                preferida = "pasto"
-            elif animal.__class__.__name__ == "Leon":
-                preferida = "carne"
-            elif animal.__class__.__name__ == "Chimpance":
-                preferida = "insectos"
-            else:
-                preferida = None
+            # Definir preferencia
+            if animal.__class__.__name__ == "Elefante": preferida = "pasto"
+            elif animal.__class__.__name__ == "Leon": preferida = "carne"
+            elif animal.__class__.__name__ == "Chimpance": preferida = "insectos"
+            else: preferida = None
 
-            # buscar la comida mas cercana
+            # Buscar comida cercana
             comida_cercana = None
             menor_distancia = 999
             for c in self.comidas:
@@ -97,26 +117,67 @@ class Sabana:
                         menor_distancia = dist
                         comida_cercana = c
 
-            # moverse hacia la comida
+            # Moverse
             if comida_cercana:
                 x, y = animal.posicion
                 cx, cy = comida_cercana.posicion
-                if cx > x:
-                    x += 1
-                elif cx < x:
-                    x -= 1
-                if cy > y:
-                    y += 1
-                elif cy < y:
-                    y -= 1
+                
+                # Logica simple de acercamiento
+                if cx > x: x += 1
+                elif cx < x: x -= 1
+                if cy > y: y += 1
+                elif cy < y: y -= 1
+                
                 animal.posicion = (x, y)
 
-                # si llego, comer
+                # Comer si llego
                 if animal.posicion == comida_cercana.posicion:
                     animal.comer()
-                    self.comidas.remove(comida_cercana)
-                    print(f"{animal.nombre} comio {preferida} en {animal.posicion}")
-        # Si queda poca comida, generar mas
+                    # Verificar si la comida sigue en la lista antes de borrarla
+                    # (Por si otro animal se la comio en el mismo turno)
+                    if comida_cercana in self.comidas:
+                        self.comidas.remove(comida_cercana)
+        
+        # Regenerar comida si falta
         if len(self.comidas) < 3:
             self.generar_comida(5)
+
+    # METODOS PARA PERSISTENCIA
+
+    def guardar_datos(self, nombre_slot):
+        # Empaquetamos todo lo necesario para reconstruir la sabana
+        datos_modelo = {
+            "animales": self.animales,
+            "comidas": self.comidas,
+            "ancho": self.ancho,
+            "alto": self.alto,
+            "ciclos": self.ciclos
+        }
+
+        # Metadatos para mostrar en el menu
+        metadatos = {
+            "ciclos": self.ciclos,
+            "cant_animales": len(self.animales),
+            "info_extra": f"Ciclo {self.ciclos} - {len(self.animales)} Animales"
+        }
+
+        exito, mensaje = self.manejador.guardar_partida(nombre_slot, datos_modelo, metadatos)
+        return mensaje
+
+    def cargar_datos(self, nombre_slot):
+        datos, mensaje = self.manejador.cargar_partida(nombre_slot)
+
+        if datos is not None:
+            # Restauramos el estado
+            self.animales = datos["animales"]
+            self.comidas = datos["comidas"]
+            self.ancho = datos["ancho"]
+            self.alto = datos["alto"]
+            self.ciclos = datos["ciclos"] # Recuperamos el ciclo donde quedamos
+            return True, mensaje
+        else:
+            return False, mensaje
+
+    def obtener_info_partidas(self):
+        return self.manejador.listar_partidas()
 
